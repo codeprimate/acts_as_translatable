@@ -1,0 +1,40 @@
+ActsAsTranslatable
+===================
+
+acts_as_translatable allows for seamless internationalization and localization of model data.
+
+Installation
+============
+ - Add a "value" field with type "String" or "Text" to your model.
+ - Add "acts_as_translatable" to your model definition
+# script/generate translations
+# rake db:migrate
+
+
+Example (in the form of an rspec test excerpt)
+==============================================
+@poll_question = Factory.create(:poll_question)
+Translation.destroy_all
+@poll_question.content = "foo1"
+@poll_question.save
+@poll_question.content.should == "foo1"
+
+@poll_question.content = {"en-us" => "foo-en-us"}
+@poll_question.save
+@poll_question.content.should == "foo1"
+
+@poll_question.content = {"es" => "foo-es"}
+@poll_question.save
+@poll_question.content("en-us").should == "foo-en-us"
+@poll_question.content("es").should == "foo-es"
+
+@poll_question.content = {"en-us" => "foo-en-us2", "es" => "foo-es2", "default" => "foo2"}
+@poll_question.save
+@poll_question.reload
+@poll_question.content.should == "foo2"
+@poll_question.content("en-us").should == "foo-en-us2"
+@poll_question.content("es").should == "foo-es2"
+ 
+
+-
+Copyright (c) 2009 Patrick Morgan and Master Web Design, released under the MIT license
